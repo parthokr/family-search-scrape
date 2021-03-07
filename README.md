@@ -2,8 +2,8 @@ Available commands:
 
 1. python run.py --row=<NUMBER_OF_ROWS>
 > Fetch <NUMBER_OF_ROWS> rows from input CSV
-> Hidden parameters 
-> --clear --merge  --match=exact
+
+> Hidden parameters  --clear --merge  --match=exact
 
 2. python run.py --clear
 > Clear history and cache
