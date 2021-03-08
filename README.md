@@ -17,3 +17,9 @@ Available commands:
 5. python run.py --row=<NUMBER_OF_ROWS> --match=approximate
 > Perform an approximate search. This may fetch humongous amount of data. 
 
+6. python run.py --set-secret
+> Set account credentials and collection id   
+
+7. python run.py --status
+> Log current fetch status and account details  
+
