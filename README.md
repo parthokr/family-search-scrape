@@ -5,9 +5,16 @@
 3. Enter the following commands one by one
     3.1 `pip install -r requirements.txt`
     3.2 python run.py --row=<NO_OF_ROWS_IN_INPUT_CSV>
+        > You will be prompted to enter account details and collection id. 
+
+        > For 'United Kingdom, World War I Service Records, 1914-1920' the collection id is **2125045**
 4. Sit back and wait until this is finished
 5. Output will be at out/ directory
 
+# For next run
+> This time you don't have to setup just run any commands from the table 'Available Commands'
+
+> For any help enter `python run.py --help' in project directory
 Available commands:
 
 1. python run.py --row=<NUMBER_OF_ROWS>
