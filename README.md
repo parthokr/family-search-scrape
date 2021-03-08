@@ -7,10 +7,10 @@
     3.1 `pip install -r requirements.txt`
 
     3.2 python run.py --row=<NO_OF_ROWS_IN_INPUT_CSV>
-    
+
         > You will be prompted to enter account details and collection id. 
 
-        > For 'United Kingdom, World War I Service Records, 1914-1920' the collection id is **2125045**
+        > For 'United Kingdom, World War I Service Records, 1914-1920' the collection id is 2125045
 4. Sit back and wait until this is finished
 5. Output will be at out/ directory
 
