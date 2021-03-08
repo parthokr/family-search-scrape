@@ -3,6 +3,7 @@
 1. Unzip 'family-search-scrapper.zip' 
 2. Open terminal in the unzipped folder
 3. Enter the following commands one by one
+
     3.1 `pip install -r requirements.txt`
     3.2 python run.py --row=<NO_OF_ROWS_IN_INPUT_CSV>
         > You will be prompted to enter account details and collection id. 
