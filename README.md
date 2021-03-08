@@ -23,3 +23,6 @@ Available commands:
 7. python run.py --status
 > Log current fetch status and account details  
 
+8. python run.py --help
+> List all parameters and examples    
+
