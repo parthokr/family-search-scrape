@@ -15,6 +15,7 @@
 > This time you don't have to setup just run any commands from the table 'Available Commands'
 
 > For any help enter `python run.py --help' in project directory
+
 Available commands:
 
 1. python run.py --row=<NUMBER_OF_ROWS>
