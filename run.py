@@ -126,6 +126,12 @@ def set_secret():
     cred_file.writelines([username + '\n', password + '\n', collection_id])
     cred_file.close()
     print('Successfully setup account')
+
+
+def help():
+    from service.help import Help
+    Help().help()
+
 if __name__ == "__main__":
     try:
         try:
@@ -135,6 +141,9 @@ if __name__ == "__main__":
             create_cred = open('credentials.txt', 'w')
             create_cred.close()
             set_secret()
+        if '--help' in sys.argv:
+            help()
+            sys.exit(0)
 
         if '--set-secret' in sys.argv:
             set_secret()
