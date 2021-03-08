@@ -14,6 +14,7 @@ from openpyxl import load_workbook, Workbook
 
 class FamilySearchScrapper(PRParser):
     def __init__(self, **kwargs):
+        self.read_credentials()
         self.count = 0
         self.filename = kwargs.get('filename', None)
         self.id = kwargs.get('id', None) # id for writing logs
@@ -58,8 +59,8 @@ class FamilySearchScrapper(PRParser):
         }
 
         body = {
-            'userName': 'ww1_project',
-            'password': 'maledizione222',
+            'userName': self.username,
+            'password': self.password,
             'params': params
         }
 
@@ -72,9 +73,9 @@ class FamilySearchScrapper(PRParser):
             raise Exception("Must have firstname or surname")
 
         if self.match == 'approximate':
-            self.search_url = f"https://www.familysearch.org/service/search/hr/v2/personas?q.givenName={self.firstname}&q.surname={self.surname}&f.collectionId=2125045&count=20&offset=0&m.defaultFacets=on&m.queryRequireDefault=on&m.facetNestCollectionInCategory=on"
+            self.search_url = f"https://www.familysearch.org/service/search/hr/v2/personas?q.givenName={self.firstname}&q.surname={self.surname}&f.collectionId={self.collection_id}&count=20&offset=0&m.defaultFacets=on&m.queryRequireDefault=on&m.facetNestCollectionInCategory=on"
         elif self.match == "exact":
-            self.search_url = f"https://www.familysearch.org/service/search/hr/v2/personas?q.givenName={self.firstname}&q.givenName.exact=on&q.surname={self.surname}&q.surname.exact=on&f.collectionId=2125045&count=20&offset=0&m.defaultFacets=on&m.queryRequireDefault=on&m.facetNestCollectionInCategory=on"
+            self.search_url = f"https://www.familysearch.org/service/search/hr/v2/personas?q.givenName={self.firstname}&q.givenName.exact=on&q.surname={self.surname}&q.surname.exact=on&f.collectionId={self.collection_id}&count=20&offset=0&m.defaultFacets=on&m.queryRequireDefault=on&m.facetNestCollectionInCategory=on"
         else:
             raise Exception("Unknown match criteria")
 
@@ -118,7 +119,7 @@ class FamilySearchScrapper(PRParser):
             'sec-fetch-site': 'same-origin'
         }
         for link in links[0:1]:
-            start = time.time()
+            # start = time.time()           # <----- start timer
             data = self.req.get(links[0], headers = data_header)
             super().__init__(data.text)
 
@@ -132,8 +133,8 @@ class FamilySearchScrapper(PRParser):
             self.count += 1
             self.wb.save(self.filename)
 
-            end = time.time()
-            print(end - start)
+            # end = time.time()            # <--------- end timer
+            # print(end - start)
 
     def read_existing_excel(self):
         for i in range(2, self.count+2):
@@ -146,6 +147,14 @@ class FamilySearchScrapper(PRParser):
     
     def clear_data(self):
         super().clear_data()
+    
+    def read_credentials(self):
+        cred_file = open('credentials.txt', 'r')
+        content = cred_file.readlines()
+        self.username = content[0].strip()
+        self.password = content[1].strip()
+        self.collection_id = content[2].strip()
+        cred_file.close()
 
 if __name__ == '__main__':
     obj = FamilySearchScrapper()
