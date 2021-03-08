@@ -94,8 +94,56 @@ def merge_worksheets(excel_names):
 
         print(f'merged.xlsx has been thrown at {os.getcwd()}\\out\\merged.xlsx')
 
+
+def show_status():
+    cred_file = open('credentials.txt', 'r')
+    content = cred_file.readlines()
+    username = content[0].strip()
+    password = content[1].strip()
+    collection_id = content[2].strip()
+    print('Username: ', username)
+    print('Password: ', password)
+    print('Collection ID: ', collection_id)
+    cred_file.close()
+
+    total = 0
+    for i in range(1, 6):
+        log_file = open(f'log/worker-{i}.txt', 'r')
+        content = log_file.readlines()
+        desc = content[0].strip()
+        status = content[1].strip()
+        total += int(desc.split(' ')[1])
+        print(f'Worker {i}\t\tDesc: {desc}\t\tStatus: {status}')
+        log_file.close()
+    print(f'--------------------------Total {total} rows written--------------------------------\n')
+    print(f'Check {os.getcwd()}\\log.txt for more information (failed rows)')
+
+def set_secret():
+    username = input('Enter username: ')
+    password = input('Enter password: ')
+    collection_id = input('Enter collection id: ')
+    cred_file = open('credentials.txt', 'w')
+    cred_file.writelines([username + '\n', password + '\n', collection_id])
+    cred_file.close()
+    print('Successfully setup account')
 if __name__ == "__main__":
     try:
+        try:
+            check_cred = open('credentials.txt', 'r')
+            check_cred.close()
+        except FileNotFoundError:
+            create_cred = open('credentials.txt', 'w')
+            create_cred.close()
+            set_secret()
+
+        if '--set-secret' in sys.argv:
+            set_secret()
+            sys.exit(0)
+
+        if '--status' in sys.argv:
+            show_status()
+            sys.exit(0)
+            
         if '--clear' in sys.argv:
             clear_history()
             sys.exit(0)
