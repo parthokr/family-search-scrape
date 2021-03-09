@@ -18,6 +18,7 @@ class FamilySearchScrapper(PRParser):
         self.count = 0
         self.filename = kwargs.get('filename', None)
         self.id = kwargs.get('id', None) # id for writing logs
+        self.research = True
 
         if (self.filename is None):
             raise Exception('Please provide a filename')
@@ -73,9 +74,9 @@ class FamilySearchScrapper(PRParser):
             raise Exception("Must have firstname or surname")
 
         if self.match == 'approximate':
-            self.search_url = f"https://www.familysearch.org/service/search/hr/v2/personas?q.givenName={self.firstname}&q.surname={self.surname}&f.collectionId={self.collection_id}&count=20&offset=0&m.defaultFacets=on&m.queryRequireDefault=on&m.facetNestCollectionInCategory=on"
+            self.search_url = f"https://www.familysearch.org/service/search/hr/v2/personas?q.givenName={self.firstname}&q.surname={self.surname}&f.collectionId={self.collection_id}&count=100&offset=0&m.defaultFacets=on&m.queryRequireDefault=on&m.facetNestCollectionInCategory=on"
         elif self.match == "exact":
-            self.search_url = f"https://www.familysearch.org/service/search/hr/v2/personas?q.givenName={self.firstname}&q.givenName.exact=on&q.surname={self.surname}&q.surname.exact=on&f.collectionId={self.collection_id}&count=20&offset=0&m.defaultFacets=on&m.queryRequireDefault=on&m.facetNestCollectionInCategory=on"
+            self.search_url = f"https://www.familysearch.org/service/search/hr/v2/personas?q.givenName={self.firstname}&q.givenName.exact=on&q.surname={self.surname}&q.surname.exact=on&f.collectionId={self.collection_id}&count=100&offset=0&m.defaultFacets=on&m.queryRequireDefault=on&m.facetNestCollectionInCategory=on"
         else:
             raise Exception("Unknown match criteria")
 
@@ -86,11 +87,19 @@ class FamilySearchScrapper(PRParser):
 
         links = re.findall(r'https://www.familysearch.org/ark:/[0-9]+/[0-9]+:[0-9]+:[\w-]+', source)
         if (len(links) == 0):
-            print(f"Not found for {self.firstname.replace('%20',' ')}")
-            log_file = open(f'log/logs.txt', 'a+')
-            log_file.write(f'[{self.id}]     Status: Failed to fetch\n')
-            log_file.close()
-            return
+            if self.research:
+                """ Append wildcard for firstname and surname and disable research for next failed search and """
+                self.firstname += '*'
+                self.surname += '*'
+                self.research = False
+                self.search()
+            else:
+                print(f"Not found for {self.firstname.replace('%20',' ')} {self.surname.replace('%20',' ')}")
+                log_file = open(f'log/logs.txt', 'a+')
+                log_file.write(f'[{self.id}]     Status: Failed to fetch\n')
+                log_file.close()
+                self.research = True
+                return
 
         
         fssessionid = self.req.cookies.get_dict()['fssessionid']
@@ -118,9 +127,10 @@ class FamilySearchScrapper(PRParser):
             'sec-fetch-mode': 'cors',
             'sec-fetch-site': 'same-origin'
         }
-        for link in links[0:1]:
+        links = set(links)
+        for link in links:
             # start = time.time()           # <----- start timer
-            data = self.req.get(links[0], headers = data_header)
+            data = self.req.get(link, headers = data_header)
             super().__init__(data.text)
 
             # data_list = super().get_data()
