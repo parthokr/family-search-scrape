@@ -1,3 +1,5 @@
+# For more readable version open 'how-to' directory
+
 # How to set up?
 > Make sure you have python version 3 installed 
 1. Unzip 'family-search-scrapper.zip' 
@@ -11,9 +13,10 @@
         > You will be prompted to enter account details and collection id. 
 
         > For 'United Kingdom, World War I Service Records, 1914-1920' the collection id is 2125045
+        
 4. Sit back and wait until this is finished
 5. Output will be at out/ directory
-
+6. out directory will contain 5 partially downloaded files and one 'merged.xlsx' file
 # For next run
 > This time you don't have to setup just run any commands from the table 'Available Commands'
 
