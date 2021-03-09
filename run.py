@@ -12,6 +12,7 @@ from multiprocessing import Pool
 
 import pandas as pd
 
+match = 'exact'
 
 class Run(ReadInput):
     def __init__(self, worker_id, filename, start, end, count = 0):
@@ -19,11 +20,14 @@ class Run(ReadInput):
         self.worker_id = worker_id
         if (count != 0):
             filename_with_path = f'out/{start+1 - count}-{end}.xlsx'
-        self.fscrapper = FamilySearchScrapper(match='approximate', filename = filename_with_path, count = count)
+        self.fscrapper = FamilySearchScrapper(match=match, filename = filename_with_path, count = count)
         self.fscrapper.count = count
         super(Run, self).__init__(filename, start, end)
-        self.execute()
-
+        try:
+        	self.execute()
+        except KeyboardInterrupt:
+        	print('Successfully exited')
+        	return
     def execute(self):
         for row in self.reader:
             self.fscrapper.firstname = row[0].replace(' ', '%20')
