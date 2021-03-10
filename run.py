@@ -30,8 +30,11 @@ class Run(ReadInput):
         	return
     def execute(self):
         for row in self.reader:
-            self.fscrapper.firstname = row[0].replace(' ', '%20')
-            self.fscrapper.surname = row[1].replace(' ', '%20')
+            firstname = row[0].split(' ')
+            surname = row[1].split(' ')
+            # append wildcard if initials
+            self.fscrapper.firstname = ' '.join(map(lambda x: x + '*' if len(x) == 1 else x, firstname)).strip().replace(' ', '%20')
+            self.fscrapper.surname = ' '.join(map(lambda x: x + '*' if len(x) == 1 else x, surname)).strip().replace(' ', '%20')
             self.fscrapper.id = row[2]
             self.fscrapper.search()
             try:
